@@ -1,0 +1,3 @@
+class Polyline < ApplicationRecord
+  
+end

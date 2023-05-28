@@ -7,10 +7,58 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script type="text/javascript" src="https://rawgit.com/jieter/Leaflet.encoded/master/Polyline.encoded.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" type="text/css" href="./index.css" />
+
+
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
+
+    <div class="nav">
+      <a href="/about">about</a>
+    </div>
+    <div id="map" style="width: 100%; height: 100%"></div>
+
+    <script>
+
+    var map = L.map('map').setView([ 39.730133, -105.085322 ], 13);
+          L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 22,
+            minZoom: 1,
+            id: 'mapbox/satellite-v9',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1Ijoiam9zaHdvcmtzIiwiYSI6ImNrcWk2NzUxeTJhbm8yem4weDFreTY5bjQifQ.Qja1F9B1-i7hK3KOvSYAvg'
+          }).addTo(map);
+
+    var encodedRoutes = {{ runs|safe }}
+    // console.log(encodedRoutes);
+
+
+    for (let encoded of encodedRoutes) {
+      console.log(encoded);
+      var coordinates = L.Polyline.fromEncoded(encoded).getLatLngs();
+      console.log(coordinates);
+
+      L.polyline(
+          coordinates,
+          {
+              color: '#00FF00',
+              weight: 2,
+              opacity: .7,
+              lineJoin: 'round'
+          }
+      ).addTo(map);
+    }
+    </script>
     <%= yield %>
+
+    
   </body>
 </html>
