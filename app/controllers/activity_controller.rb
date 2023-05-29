@@ -1,5 +1,6 @@
 class ActivityController < ApplicationController
   def index
+    @message = "ahoy from controller"
     @polylines = Polyline.all.pluck(:summary)
   end
 
