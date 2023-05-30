@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_30_001639) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_30_180250) do
   create_table "polylines", force: :cascade do |t|
     t.string "activity_name"
     t.string "summary"
@@ -19,6 +19,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_30_001639) do
     t.datetime "updated_at", null: false
     t.date "started_at"
     t.datetime "activity_started_at_date_time"
+    t.integer "activity_id"
   end
 
 end

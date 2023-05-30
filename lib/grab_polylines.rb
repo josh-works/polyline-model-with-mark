@@ -4,18 +4,21 @@ class GrabPolylines
     Strava::Api::Client.new(
       access_token: "d3ec32774e95adaf17120a3bbc4b79e67f498c9e"
       # get by running strava-athlete-activities Token.refresh_existing_token
+      # or check readme
     )
   end
 
   def create_polylines
-    # existing_polylines = Polyline.all.pluck(:summary)
+    existing_polyline_ids = Polyline.all.pluck(:activity_id)
 
-    client.athlete_activities.each do |activity|
+    client.athlete_activities(page: 5).each do |activity|
+      
+      next if existing_polyline_ids.include?(activity["id"])
       summary = activity["map"]["summary_polyline"]
       name = activity["name"]
-      # next if existing_polylines.include?(summary)
 
       Polyline.create(
+        activity_id: activity["id"],
         summary: summary,
         detail: name,
         activity_name: name,
