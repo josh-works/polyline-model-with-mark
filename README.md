@@ -116,3 +116,29 @@ Polyline.all.sort_by(&:started_at).pluck(:id)
 that gives me something nominally sortable, i'll assume this is good, not going to re-query the API just yet. 
 
 I'll sort some of these in the controller next. 
+[...]
+
+OK, filtering a bit, having trouble with the timestamp thing I'm trying to use, I don't really like it. battery is about to die, progress was made, good enough.
+
+----------------
+
+detour, need to re-gain strava password. My little rails app that had saved a token/refresh_token got the DB replaced by this new app, so I need to rebuild the postman script or something. I'm gonna run it then save it in the rails app. 
+
+
+Got it. Used Postman to hit
+
+`https://www.strava.com/oauth/token?client_id=123456&client_secret=foo&refresh_token=bar&grant_type=refresh_token`
+
+and got a new `access_code` in response. 
+
+[another hour or so of work]
+
+I:
+
+1. got the token working
+2. Ran new migrations to convert the column on the table to `datetime`, which is much more flexible
+3. re-queried strava to save accurate starting timestamp data to the local DB
+4. added filters in controller to show data between certain date ranges
+5. changed color filter so all trip segments are colored differently
+
+`git ac -m "randomize colors, filter runs by date"`

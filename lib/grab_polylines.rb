@@ -2,34 +2,33 @@ class GrabPolylines
 
   def client
     Strava::Api::Client.new(
-      access_token: "a5b2dffabf1b5cd09c6c450af58f1b77c44f13c0"
+      access_token: "d3ec32774e95adaf17120a3bbc4b79e67f498c9e"
       # get by running strava-athlete-activities Token.refresh_existing_token
     )
   end
 
   def create_polylines
-    existing_polylines = Polyline.all.pluck(:summary)
+    # existing_polylines = Polyline.all.pluck(:summary)
 
     client.athlete_activities.each do |activity|
       summary = activity["map"]["summary_polyline"]
       name = activity["name"]
-      next if existing_polylines.include?(summary)
+      # next if existing_polylines.include?(summary)
 
       Polyline.create(
         summary: summary,
         detail: name,
-        activity_name: name
+        activity_name: name,
+        activity_started_at_date_time: activity["start_date_local"]
       )
-      
     end
   end
 
-  def get_activity_photos(activity_id)
-    photos = client.activity_photos(activity_id)
-    photos.each do |photo|
-
-    end
-  end
+  # def get_activity_photos(activity_id)
+  #   photos = client.activity_photos(activity_id)
+  #   photos.each do |photo|
+  #   end
+  # end
 end
 
 # GrabPolylines.new.create_polylines
@@ -38,4 +37,19 @@ end
 # photos = client.activity_photos(9152178688)
 
 # polyline = r.json()["map"]["polyline"]
+
+# get token
+
+# require "uri"
+# require "net/http"
+
+# url = URI("https://www.strava.com/oauth/token?client_id=63764&client_secret=2e6c5168e3b97a9c0975e5377041b8a416b4fbf8&refresh_token=932469c09ef3da9dbec99a9c8e8364b0f885b021&grant_type=refresh_token")
+
+# https = Net::HTTP.new(url.host, url.port)
+# https.use_ssl = true
+
+# request = Net::HTTP::Post.new(url)
+
+# response = https.request(request)
+# puts response.read_body
 

@@ -18,6 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_30_001639) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.date "started_at"
+    t.datetime "activity_started_at_date_time"
   end
 
 end
