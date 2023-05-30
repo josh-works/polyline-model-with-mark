@@ -1,7 +1,11 @@
 class ActivityController < ApplicationController
   def index
     @message = "ahoy from controller"
-    @polylines = Polyline.all.pluck(:summary).to_json.html_safe
+    
+    results = Polyline.all.limit(2)
+    
+
+    @polylines = results.pluck(:summary).to_json.html_safe
   end
 
   def show

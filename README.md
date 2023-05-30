@@ -69,10 +69,9 @@ added some `JSON.parse(window.polylines)` magic, and good to go:
         zoomOffset: -1,
         accessToken: 'pk.eyJ1Ijoiam9zaHdvcmtzIiwiYSI6ImNrcWk2NzUxeTJhbm8yem4weDFreTY5bjQifQ.Qja1F9B1-i7hK3KOvSYAvg'
       }).addTo(map);
-      decoded = JSON.parse(window.polylines)
-        console.log(decoded)
+      var decoded = JSON.parse(window.polylines)
+
         for (let run of decoded) {
-          console.log(run)
           var coordinates = L.Polyline.fromEncoded(run).getLatLngs();
           L.polyline(
             coordinates,
@@ -88,3 +87,32 @@ added some `JSON.parse(window.polylines)` magic, and good to go:
 ```
 
 There's the whole thing. `git commit`. Then need to think on what's next. This is the thing that stopped me last time. :facepalm: 
+
+I'm pretty satisfied, and looking at this data from just the last 30 days. or, rather, the last 30 activities. who knows what 30 days of activity would look like. I could figure that out, though.
+
+I'll modify the script to include the activity date and time
+
+I'll re-run it to get the last 30 activities. 
+
+I'll add a slider or date picker or something so the front-end can adjust the time-range that the back-end is sending. 
+
+or make the full objects available to the front end. 
+
+This is cool. 
+
+I think a part 2 will soon be to get multiple pages of results back from the strava API. But I'd rather figure out how to filter the routes by recency, THEN do multiple pages of activities. The full like four years of data is pretty overwhelming. 
+
+```ruby
+# wrote a migration to add `started_at:date` 
+
+Polyline.all.each do |p|
+  p.update(started_at: (1.10).days.ago)
+end
+
+Polyline.all.sort_by(&:started_at).pluck(:id)
+
+```
+
+that gives me something nominally sortable, i'll assume this is good, not going to re-query the API just yet. 
+
+I'll sort some of these in the controller next. 

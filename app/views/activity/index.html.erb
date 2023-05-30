@@ -4,7 +4,13 @@
   <% end %>
 
  hi <br> there
- <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> 
+ <br> <br> <br> <br> <br> <br> <br> <br> <br> 
+ <br> <br> <br> <br> <br> <br> <br> <br> <br> 
+ <br> <br> <br> <br> <br> <br> <br> <br> <br> 
+ <br> <br> <br> <br> <br> <br> <br> <br> <br>
+ <br> <br> <br> <br> <br> <br> <br> <br> <br>
+ <br> <br> <br> <br> <br> <br> <br> <br> <br>
+ <br> <br> <br> <br> <br> <br> <br> <br> <br>
  </div>
      <script>
       window.polylines = "<%= j @polylines %>"
@@ -20,9 +26,7 @@
         accessToken: 'pk.eyJ1Ijoiam9zaHdvcmtzIiwiYSI6ImNrcWk2NzUxeTJhbm8yem4weDFreTY5bjQifQ.Qja1F9B1-i7hK3KOvSYAvg'
       }).addTo(map);
       decoded = JSON.parse(window.polylines)
-        console.log(decoded)
         for (let run of decoded) {
-          console.log(run)
           var coordinates = L.Polyline.fromEncoded(run).getLatLngs();
           L.polyline(
             coordinates,
