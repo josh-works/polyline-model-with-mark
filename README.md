@@ -142,3 +142,11 @@ I:
 5. changed color filter so all trip segments are colored differently
 
 `git ac -m "randomize colors, filter runs by date"`
+
+-----------------------
+
+OK, now I want a button to jump the view to a certain city and zoom level.
+
+`[Seattle][Bali][Trip to Canada]`
+
+each button could have `latlng=39.681635,-105.040421,12` and could split on commas, something like `lat, lng, zzoom`

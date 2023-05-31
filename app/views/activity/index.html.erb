@@ -1,8 +1,14 @@
+ <%= link_to "root", root_path %> <br>
+ <%= link_to "last 10 days", "?days=10"  %> <br>
+ <%= link_to "last 30 days", "?days=30"  %> <br>
+ <%= link_to "last 60 days", "?days=60"  %>  <br>
+ <%= link_to "january 2023 activity", "?begin=20230101&end=20230131"  %> <br>
+ <%= link_to "february 2023 activity", "?begin=20230201&end=20230228"  %> <br>
+ <%= link_to "march 2023 activity", "?begin=20230301&end=20230331"  %> <br>
+ <%= link_to "april 2023 activity", "?begin=20230401&end=20230430"  %> <br>
+ <%= link_to "seattle", "?latlng=39.681635,-105.040421"  %> <br>
+
  <div id="map" style="width: 100%; height: 100%;">
-
- <%= content_tag :div, class: "temp_information", data: {temp: @temp} do %>
-  <% end %>
-
  hi <br> there
  <br> <br> <br> <br> <br> <br> <br> <br> <br> 
  <br> <br> <br> <br> <br> <br> <br> <br> <br> 
@@ -13,7 +19,7 @@
      <script>
       window.polylines = "<%= j @polylines %>"
 
-      var map = L.map('map').setView([ 39.730133, -105.085322 ], 13);
+      var map = L.map('map').setView([ 39.681635, -105.040421 ], 12);
       L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 22,
