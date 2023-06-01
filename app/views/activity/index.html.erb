@@ -1,3 +1,4 @@
+<div class="filters">
  <%= link_to "root", root_path %> <br>
  <%= link_to "last 10 days", "?days=10"  %> <br>
  <%= link_to "last 30 days", "?days=30"  %> <br>
@@ -6,7 +7,15 @@
  <%= link_to "february 2023 activity", "?begin=20230201&end=20230228"  %> <br>
  <%= link_to "march 2023 activity", "?begin=20230301&end=20230331"  %> <br>
  <%= link_to "april 2023 activity", "?begin=20230401&end=20230430"  %> <br>
- <%= link_to "seattle", "?latlng=39.681635,-105.040421"  %> <br>
+ <%= link_to "2020 activity", "?begin=20200101&end=20201231"  %> <br>
+ <%= link_to "2021 activity", "?begin=20210101&end=20211231"  %> <br>
+ <%= link_to "2022 activity", "?begin=20220101&end=20221231"  %> <br>
+ <%= link_to "2023 activity", "?begin=20230101&end=20231231"  %> <br>
+ <%= link_to "seattle", "?latlng=47.606201,-122.322671"  %> <br>
+ <%= link_to "denver", "?latlng=39.681635,-105.040421"  %> <br>
+ <%= link_to "bali", "?latlng=-8.507687,115.261011"  %> <br>
+ <%= link_to "oslo", "?latlng=59.916448,10.752065"  %> <br>
+</div>
 
  <div id="map" style="width: 100%; height: 100%;">
  hi <br> there
@@ -18,8 +27,28 @@
  </div>
      <script>
       window.polylines = "<%= j @polylines %>"
+      var paramsArray = window.location.search.slice(1).split("&")
+      
+      var queryParams = {}
+      for(var i = 0; i < paramsArray.length; i++) {
+        var split = paramsArray[i].split("=")
 
-      var map = L.map('map').setView([ 39.681635, -105.040421 ], 12);
+        queryParams[split[0]] = split[1]
+        console.log(queryParams)
+      };
+
+      
+
+      
+      if (queryParams["latlng"]){
+       var latlng = queryParams["latlng"]
+      } else { 
+       var latlng = "39.681635,-105.040421"
+      }
+      
+      console.log(latlng)
+      
+      var map = L.map('map').setView( latlng.split(","), 12);
       L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 22,

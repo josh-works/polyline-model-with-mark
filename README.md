@@ -120,6 +120,11 @@ I'll sort some of these in the controller next.
 
 OK, filtering a bit, having trouble with the timestamp thing I'm trying to use, I don't really like it. battery is about to die, progress was made, good enough.
 
+
+
+
+
+
 ----------------
 
 detour, need to re-gain strava password. My little rails app that had saved a token/refresh_token got the DB replaced by this new app, so I need to rebuild the postman script or something. I'm gonna run it then save it in the rails app. 
@@ -132,6 +137,7 @@ Got it. Used Postman to hit
 and got a new `access_code` in response. 
 
 [another hour or so of work]
+
 
 I:
 

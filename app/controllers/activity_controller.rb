@@ -12,19 +12,22 @@ class ActivityController < ApplicationController
     #   )    
     # end
 
-    # if activities_params["begin"]
-    #   beginning_date = DateTime.parse(activities_params["begin"]).beginning_of_day
-    #   ending_date = DateTime.parse(activities_params["end"]).end_of_day
+    if activities_params["begin"]
+      beginning_date = DateTime.parse(activities_params["begin"]).beginning_of_day
+      ending_date = DateTime.parse(activities_params["end"]).end_of_day
 
 
-    #   results = Polyline.all.where(
-    #     "activity_started_at_date_time BETWEEN ? AND ?", 
-    #     beginning_date,
-    #     ending_date
-    #   )    
-    # end
+      results = Polyline.all.where(
+        "activity_started_at_date_time BETWEEN ? AND ?", 
+        beginning_date,
+        ending_date
+      )    
+    end
 
-    results = Polyline.all
+    unless activities_params["begin"]
+      results = Polyline.all
+    end
+    # results = Polyline.all
 
 
     if results
