@@ -1,8 +1,11 @@
+require 'openssl'
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+
 class GrabPolylines
 
   def client
     Strava::Api::Client.new(
-      access_token: "c92cf532a735f269cf679bd891af63ed15ee5400"
+      access_token: "2de9ce57234f2846c271369577cca95def2baf39"
       # get by running strava-athlete-activities Token.refresh_existing_token
       # or check readme
     )
