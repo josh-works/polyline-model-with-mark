@@ -1,20 +1,26 @@
 <div class="filters">
- <%= link_to "root", root_path %> <br>
- <%= link_to "last 10 days", "?days=10"  %> <br>
- <%= link_to "last 30 days", "?days=30"  %> <br>
- <%= link_to "last 60 days", "?days=60"  %>  <br>
- <%= link_to "january 2023 activity", "?begin=20230101&end=20230131"  %> <br>
- <%= link_to "february 2023 activity", "?begin=20230201&end=20230228"  %> <br>
- <%= link_to "march 2023 activity", "?begin=20230301&end=20230331"  %> <br>
- <%= link_to "april 2023 activity", "?begin=20230401&end=20230430"  %> <br>
- <%= link_to "2020 activity", "?begin=20200101&end=20201231"  %> <br>
- <%= link_to "2021 activity", "?begin=20210101&end=20211231"  %> <br>
- <%= link_to "2022 activity", "?begin=20220101&end=20221231"  %> <br>
- <%= link_to "2023 activity", "?begin=20230101&end=20231231"  %> <br>
- <%= link_to "seattle", "?latlng=47.606201,-122.322671"  %> <br>
- <%= link_to "denver", "?latlng=39.681635,-105.040421"  %> <br>
- <%= link_to "bali", "?latlng=-8.507687,115.261011"  %> <br>
- <%= link_to "oslo", "?latlng=59.916448,10.752065"  %> <br>
+<ul>
+  <div class="by_time">
+ <li><%= link_to "root", root_path %> </li>
+ <li><%= link_to "last 10 days", "?days=10"  %> </li>
+ <li><%= link_to "last 30 days", "?days=30"  %> </li>
+ <li><%= link_to "last 60 days", "?days=60"  %>  </li>
+ <li><%= link_to "january 2023 activity", "?begin=20230101&end=20230131"  %> </li>
+ <li><%= link_to "february 2023 activity", "?begin=20230201&end=20230228"  %> </li>
+ <li><%= link_to "march 2023 activity", "?begin=20230301&end=20230331"  %> </li>
+ <li><%= link_to "april 2023 activity", "?begin=20230401&end=20230430"  %> </li>
+ <li><%= link_to "2020 activity", "?begin=20200101&end=20201231"  %> </li>
+ <li><%= link_to "2021 activity", "?begin=20210101&end=20211231"  %> </li>
+ <li><%= link_to "2022 activity", "?begin=20220101&end=20221231"  %> </li>
+ <li><%= link_to "2023 activity", "?begin=20230101&end=20231231"  %> </li>
+ </div>
+ <div class="by_location">
+ <li><%= link_to "seattle", "?latlng=47.606201,-122.322671"  %> </li>
+ <li><%= link_to "denver", "?latlng=39.681635,-105.040421"  %> </li>
+ <li><%= link_to "bali", "?latlng=-8.507687,115.261011"  %> </li>
+ <li><%= link_to "oslo", "?latlng=59.916448,10.752065"  %> </li>
+ </div>
+</ul>
 </div>
 
  <div id="map" style="width: 100%; height: 100%;">

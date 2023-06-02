@@ -13,3 +13,33 @@
  *= require_tree .
  *= require_self
  */
+
+
+div {
+  /* color: red; */
+  /* border: dashed; */
+}
+
+.filters {
+  /* color: blue; */
+  /* border: solid; */
+  height: 100px;
+}
+
+.filters ul {
+  list-style-type: none;
+}
+
+.filters > div {
+  /* color: lightblue; */
+  border: solid;
+}
+
+.filters a {
+  text-decoration: none;
+}
+
+li {
+  width: 10%;
+  float: left;
+}

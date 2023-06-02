@@ -156,3 +156,30 @@ OK, now I want a button to jump the view to a certain city and zoom level.
 `[Seattle][Bali][Trip to Canada]`
 
 each button could have `latlng=39.681635,-105.040421,12` and could split on commas, something like `lat, lng, zzoom`
+
+Got it working, btw. Buttons add the query params to the URL, I can read those in the javascript, set the map coords to whatever's in the browser bar
+
+--------------------
+
+Now I'm trying to get the call to the Strava API to auto-paginate, so I can push it to production, and load the data once, and have stuff 'live' for the world. 
+
+I'll need to be able to jump into a rails console session, and run `GrabPolylines.new.create_polylines`, and have the DB populate, and then have it all viewable in a browser, mobile or phone. 
+
+:fingerscrossed:
+
+Should be something like:
+
+```ruby
+def create_polylines
+  page = 1
+  loop do
+    client.athlete_activities(page: page, result_count: 100).each do |activity|
+      # This doesn't get hit if I over-shoot the page range
+    end
+
+    page +=1 
+    return if client.athlete_activities(page: page, result_count: 100).response.empty?
+    end
+end
+```
+
