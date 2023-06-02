@@ -233,4 +233,53 @@ Importing from Strava (`rails c`, `GrabPolylines.new.create_polylines`) erroring
 9185739268 is out of range for ActiveModel::Type::Integer with limit 4 bytes (ActiveModel::RangeError)
 ```
 
+```
+$ heroku config --app mobility-data
+
+=== mobility-data Config Vars
+LANG:                     en_US.UTF-8
+RACK_ENV:                 production
+RAILS_ENV:                production
+RAILS_LOG_TO_STDOUT:      enabled
+RAILS_SERVE_STATIC_FILES: enabled
+SECRET_KEY_BASE:          alsdkjfa;lskdjflaksjd
+
+
+$ heroku addons:create heroku-postgresql
+# https://stackoverflow.com/questions/32815705/heroku-pgconnectionbad-could-not-connect-to-server-connection-refused
+
+$ heroku config --app mobility-data
+=== mobility-data Config Vars
+DATABASE_URL:             postgres://hpaasldkfj4@ec2-54-145-174-66.compute-1.amazonaws.com:5432/dcasdfd
+LANG:                     en_US.UTF-8
+RACK_ENV:                 production
+RAILS_ENV:                production
+RAILS_LOG_TO_STDOUT:      enabled
+RAILS_SERVE_STATIC_FILES: enabled
+SECRET_KEY_BASE:          asdf
+```
+
+thought that would do it but it's not...
+
+```
+PG::ConnectionBad: connection to server at "54.145.174.66", port 5432 failed: FATAL:  permission denied for database "postgres"
+DETAIL:  User does not have CONNECT privilege.
+```
+
+OK, got it working. Don't know what the problem was. Restarted heroku, learned I could only really do `heroku pg:reset`, which helped.
+
+Now I'm trying to run `GrabPolylines.new.create_polylines` from a heroku rails console. It's generating an error as soon as it tries to hit the Strava API:
+
+```
+> heroku run rails c
+Running rails c on ⬢ mobility-data... up, run.8528 (Eco)
+Loading production environment (Rails 7.0.5)
+irb(main):001:0> GrabPolylines.new.create_polylines
+getting page:
+1
+/app/vendor/ruby-3.1.2/lib/ruby/3.1.0/net/http.rb:1040:in `initialize': SSL_CTX_load_verify_file: system lib (Faraday::SSLError)
+/app/vendor/ruby-3.1.2/lib/ruby/3.1.0/net/http.rb:1040:in `initialize': SSL_CTX_load_verify_file: system lib (OpenSSL::SSL::SSLError)
+irb(main):002:0>
+```
+
 
