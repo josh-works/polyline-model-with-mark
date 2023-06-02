@@ -144,6 +144,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.15.2-x86_64-linux)
       racc (~> 1.4)
+    pg (1.5.3)
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -202,8 +203,6 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    sqlite3 (1.6.3-x86_64-darwin)
-    sqlite3 (1.6.3-x86_64-linux)
     stimulus-rails (1.2.1)
       railties (>= 6.0.0)
     strava-ruby-client (1.0.1)
@@ -247,13 +246,13 @@ DEPENDENCIES
   gon
   importmap-rails
   jbuilder
+  pg (~> 1.1)
   pry
   puma (~> 5.0)
   rails (~> 7.0.5)
   redis (~> 4.0)
   selenium-webdriver
   sprockets-rails
-  sqlite3 (~> 1.4)
   stimulus-rails
   strava-ruby-client
   turbo-rails

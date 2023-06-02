@@ -183,3 +183,54 @@ def create_polylines
 end
 ```
 
+-------------------
+
+Got it. Very janky. 
+
+```ruby
+14.times do |page|
+  next if page == 0
+  client.athlete_activities(page:page).each do |activity|
+  end
+end
+```
+
+it's beautiful, in that it'll run in production.
+
+- [ ] get this app deployed on heroku (non-trivial, but discrete)
+- [ ] run script to load my data in production, so all visitors of the heroku app see my strava activity data
+- [ ] add /show page to scope lat/long to a polyline segment
+
+i want to then want to email three possible companies/people about job things, and say "i'm building this in public to scratch some software itch".
+
+## Let's get app running in prod, first
+
+this requires swapping sqlite to postgres.
+
+I'll run `rails db:migrate` locally and garden it towards wordking.
+
+Swapped `pg` gem, instead of `sqlite`. next time I'm gonna initialize w/postgres.
+
+ran `rails db:migrate` got `connection refused` on port `5432`, no server accepting tcp/ip connections.
+
+starting/updating postgres app....
+
+Hah. Easy. Stack Overflow FTW.
+
+https://stackoverflow.com/a/54319956
+
+`bin/rails db:system:change --to=postgresql`
+
+Now back to making sure Postgres is running locally... I seem to have two different instances of this. 
+
+Boom, it works. Re-ran `rails db:setup`. 
+
+restarted server, rendering my polylines from a fixed seeds.rb file (added a `,`)
+
+Importing from Strava (`rails c`, `GrabPolylines.new.create_polylines`) erroring with:
+
+```
+9185739268 is out of range for ActiveModel::Type::Integer with limit 4 bytes (ActiveModel::RangeError)
+```
+
+

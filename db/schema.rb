@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_30_180250) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_02_175742) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "polylines", force: :cascade do |t|
     t.string "activity_name"
     t.string "summary"
@@ -19,7 +22,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_30_180250) do
     t.datetime "updated_at", null: false
     t.date "started_at"
     t.datetime "activity_started_at_date_time"
-    t.integer "activity_id"
+    t.bigint "activity_id"
   end
 
 end
