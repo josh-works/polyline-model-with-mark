@@ -284,3 +284,181 @@ irb(main):002:0>
 
 
 heroku certs:update
+
+----------
+
+woof burnt another 90 minutes on this.
+
+I think it's related to where certs are stored.
+
+I can do `heroku run bash` and peek at `/usr/lib/ssl/certs/ca-certificates.crt`, and there's certs there. 
+
+When I create a client, I see:
+
+```ruby
+client = Strava::Api::Client.new(
+     access_token: "2de9ce57234f2846c271369577cca95def2baf39"
+   # get by running strava-athlete-activities Token.refresh_existing_token
+   # or check IKIreadme
+)
+=>
+#<Strava::Api::Client:0x00007ff64a2f8b70
+...
+client
+=>
+#<Strava::Api::Client:0x00007ff64a2f8b70
+ @access_token="2de9ce57234f2846c271369577cca95def2baf39",
+ @ca_file="/usr/lib/ssl/cert.pem",
+ @ca_path="/usr/lib/ssl/certs",
+ @endpoint="https://www.strava.com/api/v3",
+ @logger=
+```
+
+which seems okay, except I cannot write the `cert.pem` file via 
+
+```
+~ $ curl -fsSL curl.haxx.se/ca/cacert.pem -o "/usr/lib/ssl/cert.pem"
+curl: (23) Failure writing output to destination
+```
+
+or 
+
+```
+curl -fsSL curl.haxx.se/ca/cacert.pem -o "$(ruby -ropenssl -e 'puts OpenSSL::X509::DEFAULT_CERT_FILE')"
+```
+
+OK, the fix was to find _where_ on the filesystem the `ca_file` lived. 
+
+I then set a configuration option to source that `ca_file`:
+
+```ruby
+Strava::Web::Client.configure do |config|
+  config.user_agent = 'Strava Ruby Client/1.0'
+  config.ca_file = '/usr/lib/ssl/certs/certSIGN_ROOT_CA.pem'
+end
+
+class GrabPolylines
+  def client
+    Strava::Api::Client.new(
+      #
+```
+
+The way to find which file I should use was... a way.
+
+First, I found a script to download a 'good'  `ca` file. `ca` is `certificate authority` and it's a bunch of cryptographic keys in a glorified text file.  
+
+It looks like this:
+
+```
+##
+## Bundle of CA Root Certificates
+##
+## Certificate data from Mozilla as of: Tue May 30 03:12:04 2023 GMT
+##
+## This is a bundle of X.509 certificates of public Certificate Authorities
+## (CA). These were automatically extracted from Mozilla's root certificates
+## file (certdata.txt).  This file can be found in the mozilla source tree:
+## https://hg.mozilla.org/releases/mozilla-release/raw-file/default/security/nss/lib/ckfw/builtins/certdata.txt
+##
+## It contains the certificates in PEM format and therefore
+## can be directly used with curl / libcurl / php_curl, or with
+## an Apache+mod_ssl webserver for SSL client authentication.
+## Just configure this file as the SSLCACertificateFile.
+##
+## Conversion done with mk-ca-bundle.pl version 1.29.
+## SHA256: c47475103fb05bb562bbadff0d1e72346b03236154e1448a6ca191b740f83507
+##
+
+
+GlobalSign Root CA
+==================
+-----BEGIN CERTIFICATE-----
+MIIDdTCCAl2gAwIBAgILBAAAAAABFUtaw5QwDQYJKoZIhvcNAQEFBQAwVzELMAkGA1UEBhMCQkUx
+GTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExEDAOBgNVBAsTB1Jvb3QgQ0ExGzAZBgNVBAMTEkds
+b2JhbFNpZ24gUm9vdCBDQTAeFw05ODA5MDExMjAwMDBaFw0yODAxMjgxMjAwMDBaMFcxCzAJBgNV
+BAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMRAwDgYDVQQLEwdSb290IENBMRswGQYD
+VQQDExJHbG9iYWxTaWduIFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDa
+DuaZjc6j40+Kfvvxi4Mla+pIH/EqsLmVEQS98GPR4mdmzxzdzxtIK+6NiY6arymAZavpxy0Sy6sc
+:
+## This is a bundle of X.509 certificates of public Certificate Authorities
+## (CA). These were automatically extracted from Mozilla's root certificates
+## file (certdata.txt).  This file can be found in the mozilla source tree:
+## https://hg.mozilla.org/releases/mozilla-release/raw-file/default/security/nss/lib/ckfw/builtins/certdata.txt
+##
+## It contains the certificates in PEM format and therefore
+## can be directly used with curl / libcurl / php_curl, or with
+## an Apache+mod_ssl webserver for SSL client authentication.
+## Just configure this file as the SSLCACertificateFile.
+##
+## Conversion done with mk-ca-bundle.pl version 1.29.
+## SHA256: c47475103fb05bb562bbadff0d1e72346b03236154e1448a6ca191b740f83507
+##
+
+
+GlobalSign Root CA
+==================
+-----BEGIN CERTIFICATE-----
+MIIDdTCCAl2gAwIBAgILBAAAAAABFUtaw5QwDQYJKoZIhvcNAQEFBQAwVzELMAkGA1UEBhMCQkUx
+GTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExEDAOBgNVBAsTB1Jvb3QgQ0ExGzAZBgNVBAMTEkds
+b2JhbFNpZ24gUm9vdCBDQTAeFw05ODA5MDExMjAwMDBaFw0yODAxMjgxMjAwMDBaMFcxCzAJBgNV
+BAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMRAwDgYDVQQLEwdSb290IENBMRswGQYD
+VQQDExJHbG9iYWxTaWduIFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDa
+DuaZjc6j40+Kfvvxi4Mla+pIH/EqsLmVEQS98GPR4mdmzxzdzxtIK+6NiY6arymAZavpxy0Sy6sc
+THAHoT0KMM0VjU/43dSMUBUc71DuxC73/OlS8pF94G3VNTCOXkNz8kHp1Wrjsok6Vjk4bwY8iGlb
+Kk3Fp1S4bInMm/k8yuX9ifUSPJJ4ltbcdG6TRGHRjcdGsnUOhugZitVtbNV4FpWi6cgKOOvyJBNP
+c1STE4U6G7weNLWLBYy5d4ux2x8gkasJU26Qzns3dLlwR5EiUWMWea6xrkEmCMgZK9FGqkjWZCrX
+gzT/LCrBbBlDSgeF59N89iFo7+ryUp9/k5DPAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNV
+HRMBAf8EBTADAQH/MB0GA1UdDgQWBBRge2YaRQ2XyolQL30EzTSo//z9SzANBgkqhkiG9w0BAQUF
+AAOCAQEA1nPnfE920I2/7LqivjTFKDK1fPxsnCwrvQmeU79rXqoRSLblCKOzyj1hTdNGCbM+w6Dj
+Y1Ub8rrvrTnhQ7k4o+YviiY776BQVvnGCv04zcQLcFGUl5gE38NflNUVyRRBnMRddWQVDf9VMOyG
+j/8N7yy5Y0b2qvzfvGn9LhJIZJrglfCm7ymPAbEVtQwdpf5pLGkkeB6zpxxxYu7KyJesF12KwvhH
+hm4qxFYxldBniYUr+WymXUadDKqC5JlR3XC321Y9YeRq4VzW9v493kHMB65jUr9TU/Qr6cf9tveC
+X4XSQRjbgbMEHMUfpIBvFSDJ3gyICh3WZlXi/EjJKSZp4A==
+-----END CERTIFICATE-----
+
+Entrust.net Premium 2048 Secure Server CA
+=========================================
+-----BEGIN CERTIFICATE-----
+MIIEKjCCAxKgAwIBAgIEOGPe+DANBgkqhkiG9w0BAQUFADCBtDEUMBIGA1UEChMLRW50cnVzdC5u
+```
+
+```
+curl -fsSL curl.haxx.se/ca/cacert.pem -o "$(ruby -ropenssl -e 'puts OpenSSL::X509::DEFAULT_CERT_FILE')"
+```
+
+the file couldn't be written. When I ran `OpenSSL::X509::DEFAULT_CERT_FILE` in a rails console, I got a file path and expected file, but when I logged into heroku's file system with `heroku run bash`, and looked for that file, I couldn't find it. 
+
+I DID find `/usr/lib/ssl/certs/certSIGN_ROOT_CA.pem`, which looked like the certificate file. The file itself looked close in content to what I expected, and the internet sleuthing I'd done talked about updating Faraday or SSL Connection parameters to specifcy a certificate authority file. 
+
+I looked in the `strava ruby client` docs and found a param called `ca_file`, and learned that I could initialize a client with a non-default ca file path. That's what I did. Re-pushed the code to Heroku, and I was able to make the Strava API calls with correct SSL certs. 
+
+---------------
+
+
+So, the above debugging soaked up two work sessions. Here's how the checklist stands:
+
+- [x] get this app deployed on heroku (non-trivial, but discrete)
+- [x] run script to load my data in production, so all visitors of the heroku app see my strava activity data
+- [ ] add /show page to scope lat/long to a polyline segment
+
+i want to then want to email three possible companies/people about job things, and say "i'm building this in public to scratch some software itch".
+
+Let's add the `/show` page next, that'll satisfy shirley's questions about 'what is the point for which you're building this'.
+
+The app is struggling super hard on my phone to pan and zoom the map. Adding `running notes at bottom of file`. 
+
+
+
+
+# Running Notes for Bottom Of File
+
+## issues
+
+- [ ] pinch and zoom and drag is broken on mobile, causes page reloads unintentionally
+
+## features
+
+- [ ] make `GrabPolylines.rb` smart about getting new `access_code` if needed
+- [ ] modify script to stop running if route ID has been found
+- [ ] `show` page for `polyline` that shows just that polyline, or the start of it with a set zoom
+- [ ] add javascript function that changes lat/long/zoom in URL every few seconds based on map movements

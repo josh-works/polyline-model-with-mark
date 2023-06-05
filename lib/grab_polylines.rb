@@ -1,8 +1,9 @@
-require 'openssl'
-OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+Strava::Web::Client.configure do |config|
+  config.user_agent = 'Strava Ruby Client/1.0'
+  config.ca_file = '/usr/lib/ssl/certs/certSIGN_ROOT_CA.pem'
+end
 
 class GrabPolylines
-
   def client
     Strava::Api::Client.new(
       access_token: "2de9ce57234f2846c271369577cca95def2baf39"
