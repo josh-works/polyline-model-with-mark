@@ -1,2 +1,51 @@
 <h1>Activity#show</h1>
 <p>Find me in app/views/activity/show.html.erb</p>
+
+
+
+<% p = JSON.parse(@polyline) %>
+<div id="map" style="width: 100%; height: 100%;">
+hi <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br><br> <br> <br> <br> <br> <br> <br> <br> <br><br> <br> <br> <br> <br> <br> <br> <br> <br><br><br> there
+</div>
+
+<pre>
+
+title: <%= p["activity_name"] %>
+started_at: <%= p["activity_started_at_date_time"] %>
+activity_id: <%= p["activity_id"] %>
+</pre>
+
+<script>
+console.log('hithere')
+
+window.encoded_polyline = "<%= j @polyline %>"
+var polyline = JSON.parse(encoded_polyline)
+console.log(polyline["activity_name"])
+
+var map = L.map('map').setView( [39.681635,-105.040421], 12);
+L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 22,
+        minZoom: 1,
+        id: 'mapbox/satellite-v9',
+        tileSize: 512,
+        zoomOffset: -1,
+        accessToken: 'pk.eyJ1Ijoiam9zaHdvcmtzIiwiYSI6ImNrcWk2NzUxeTJhbm8yem4weDFreTY5bjQifQ.Qja1F9B1-i7hK3KOvSYAvg'
+      }).addTo(map);
+
+  var coordinates = L.Polyline.fromEncoded(polyline["summary"]).getLatLngs();
+  console.log(coordinates)
+  L.polyline(
+    coordinates,
+    {
+        color: "#1ef758",
+        weight: 3,
+        opacity: .7,
+        lineJoin: 'round'
+    }
+).addTo(map);
+
+map.setView(coordinates[0])
+
+
+</script>

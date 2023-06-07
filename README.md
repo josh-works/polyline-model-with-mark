@@ -447,7 +447,17 @@ Let's add the `/show` page next, that'll satisfy shirley's questions about 'what
 
 The app is struggling super hard on my phone to pan and zoom the map. Adding `running notes at bottom of file`. 
 
+---------------
 
+i finished the `/show` page. Added a TIL around routes, `/activity/show` vs `/activity/:id`. 
+
+I've now _rapidly_ created the `/show` page with a working map, it auto-centers on the starting coordinates of the polyline. I moved _way_ fast through passing a JSON-encoded, html_safe string from the controller, and using the `j` gem to set `window.polyline`, then in the javascript, did `var encoded_polyline = `, then `var polyline = JSON.decode(encoded_polyline)`, etc. 
+
+Popped `map.setView(coordinates[0])` right before `</script>` on the show, and good to go.
+
+I'd now like to make some minor navigational tweaks - on `/show` give a `back to index`, and on the `/index`, add a table of the rendered polylines, with each having a link to it's respective `show` page. 
+
+Not bad for what was about 20 minutes of well-documented, methodical work.
 
 
 # Running Notes for Bottom Of File

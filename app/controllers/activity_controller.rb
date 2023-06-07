@@ -38,6 +38,7 @@ class ActivityController < ApplicationController
   end
 
   def show
+    @polyline = Polyline.find(params[:id]).to_json.html_safe
   end
 
   private
