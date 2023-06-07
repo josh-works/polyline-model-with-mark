@@ -1,6 +1,8 @@
 <h1>Activity#show</h1>
 <p>Find me in app/views/activity/show.html.erb</p>
 
+<%= link_to "back to index", activity_index_path %>
+
 
 
 <% p = JSON.parse(@polyline) %>
@@ -14,6 +16,10 @@ title: <%= p["activity_name"] %>
 started_at: <%= p["activity_started_at_date_time"] %>
 activity_id: <%= p["activity_id"] %>
 </pre>
+
+<%= link_to "back", activity_index_path %>
+
+
 
 <script>
 console.log('hithere')
@@ -46,6 +52,4 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 ).addTo(map);
 
 map.setView(coordinates[0])
-
-
 </script>

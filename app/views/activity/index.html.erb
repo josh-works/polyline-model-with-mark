@@ -62,12 +62,16 @@
       }).addTo(map);
       decoded = JSON.parse(window.polylines)
       var i = 0
-      polyline_count = decoded.length
+      var polyline_count = decoded.length
       console.log(polyline_count)
+
+      console.log(decoded[0])
+
 
         for (let run of decoded) {
           i += 1
-          var coordinates = L.Polyline.fromEncoded(run).getLatLngs();
+          
+          var coordinates = L.Polyline.fromEncoded(run["summary"]).getLatLngs();
           L.polyline(
             coordinates,
             {
@@ -113,7 +117,21 @@
 <h1>Activity#index</h1>
 <p>Find me in app/views/activity/index.html.erb</p>
 
-first polyline:
-<pre>
-<%= JSON.parse(@polylines).first %>
-</pre>
+<table>
+  <tr>
+    <th>Activity Name </th>         
+    <th>Started At </th>                      
+    <th>detail </th>
+  </tr>
+
+<% @decoded_polylines = JSON.parse(@polylines) %>
+<% @decoded_polylines.each do |p| %>
+  <tr>
+    <td><%= p["activity_name"]%></td>
+    <td><%= p["activity_started_at_date_time"]%></td>
+    <td><%= link_to "show more", activity_show_path(p["id"] )%></td>
+  </tr>
+ 
+<% end %>
+
+

@@ -459,6 +459,12 @@ I'd now like to make some minor navigational tweaks - on `/show` give a `back to
 
 Not bad for what was about 20 minutes of well-documented, methodical work.
 
+[...]
+
+Done, added the table and back buttons. Had to re-jigger how I was building/passing around the `@polylines` object. I'd had it as, in the controller, something like `polylines.pluck[:detail]`, so was getting an array of `["asdf", "asdfa"]` in the view. I'm now passing through the full Polyline objects, `[{id: "1", detail: "abc"}, {}, {}]`, and had to update the view to accommodate.
+
+I then popped in a table with a little more info about each polyline, and it's starting to look like a thing!
+
 
 # Running Notes for Bottom Of File
 

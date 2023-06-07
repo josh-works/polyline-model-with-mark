@@ -31,7 +31,7 @@ class ActivityController < ApplicationController
 
 
     if results
-      @polylines = results.pluck(:summary).to_json.html_safe
+      @polylines = results.to_json.html_safe
     else
       @polylines = "".to_json.html_safe
     end
