@@ -465,6 +465,44 @@ Done, added the table and back buttons. Had to re-jigger how I was building/pass
 
 I then popped in a table with a little more info about each polyline, and it's starting to look like a thing!
 
+[...]
+
+Going to add a pop-up on a polyline mouseover event: https://leafletjs.com/reference.html#mouseevent
+
+I want the pop-up to show the lat/lng of where the cursor is, the polyline title, and eventually (but not yet) the distance of said polyline. 
+
+[...]
+
+Got it. Also added a 'highlight line' with a `mouseover` and a `mouseout` function. Pops a tooltip where the mouse intersects the line, changes the color, and removes both when departing the line. 
+
+```javascript
+  // this function is clutch, btw. 
+  map.fitBounds(line.getBounds());
+
+  var popup = L.popup();
+  popup.setContent(polyline["activity_name"]);
+  
+ var initialStyle = ""
+
+  line.on('mouseover', function(e){
+    line.bindPopup(popup);
+    popup.setLatLng(e.latlng).openOn(map);
+    console.log(e.latlng);
+    initialStyle = line.options["color"]
+    line.setStyle({color: "#EE4B2B"})
+  });
+
+  line.on('mouseout', function(e) {
+    console.log("closing...")
+    console.log(initialStyle)
+
+    e.target.closePopup();
+    line.setStyle({color: initialStyle})
+  });
+```
+
+This works on the `show` page, with a single line, I'd like to now bring it into the index, so any line mouse-over causes the whole line to show up. 
+
 
 # Running Notes for Bottom Of File
 
