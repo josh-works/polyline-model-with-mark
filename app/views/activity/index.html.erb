@@ -69,7 +69,7 @@
           i += 1
           
           var coordinates = L.Polyline.fromEncoded(run["summary"]).getLatLngs();
-          L.polyline(
+          var line = L.polyline(
             coordinates,
             {
                 color: randbow(polyline_count, i),
@@ -77,8 +77,33 @@
                 opacity: .7,
                 lineJoin: 'round'
             }
-        ).addTo(map);
-        
+          ).addTo(map);
+
+          var initialStyles = line.options
+
+          line.on('mouseover', function(e){
+            var popup = L.popup();
+            popup.setContent(run["activity_name"]);
+            this.bindPopup(popup);
+            popup.setLatLng(e.latlng).openOn(map);
+            this.setStyle({
+              color: "#EE4B2B",
+              weight: 5,
+              opacity: 3
+            })
+          });
+
+          line.on('mouseout', function(e) {
+            this.setStyle({
+              weight: 3, 
+              opacity: .7, 
+              color: randbow(polyline_count, i)
+            });
+
+            console.log(initialStyles)
+            e.target.closePopup();
+          });
+      
         }
 
         /**

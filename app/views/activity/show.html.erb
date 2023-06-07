@@ -23,7 +23,12 @@ activity_id: <%= p["activity_id"] %>
 <script>
 window.encoded_polyline = "<%= j @polyline %>"
 var polyline = JSON.parse(encoded_polyline)
-console.log(polyline["activity_name"])
+var initialStyles = {
+        color: "#1ef758",
+        weight: 3,
+        opacity: .7,
+        lineJoin: 'round'
+    }
 
 var map = L.map('map').setView( [39.681635,-105.040421], 12);
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -38,13 +43,7 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 
   var coordinates = L.Polyline.fromEncoded(polyline["summary"]).getLatLngs();
   var line = L.polyline(
-    coordinates,
-    {
-        color: "#1ef758",
-        weight: 3,
-        opacity: .7,
-        lineJoin: 'round'
-    }
+    coordinates, initialStyles
   ).addTo(map);
 
   map.fitBounds(line.getBounds());
@@ -52,22 +51,19 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
   var popup = L.popup();
   popup.setContent(polyline["activity_name"]);
   
- var initialStyle = ""
-
   line.on('mouseover', function(e){
-    line.bindPopup(popup);
+    this.bindPopup(popup);
     popup.setLatLng(e.latlng).openOn(map);
-    console.log(e.latlng);
-    initialStyle = line.options["color"]
-    line.setStyle({color: "#EE4B2B"})
+    this.setStyle({
+      color: "#EE4B2B",
+      weight: 7,
+      opacity: 5
+    })
   });
 
   line.on('mouseout', function(e) {
-    console.log("closing...")
-    console.log(initialStyle)
-
+    this.setStyle(initialStyles)
     e.target.closePopup();
-    line.setStyle({color: initialStyle})
   });
 
 </script>

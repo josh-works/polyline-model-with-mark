@@ -503,6 +503,12 @@ Got it. Also added a 'highlight line' with a `mouseover` and a `mouseout` functi
 
 This works on the `show` page, with a single line, I'd like to now bring it into the index, so any line mouse-over causes the whole line to show up. 
 
+[...]
+
+OK. made SOME progress. I'm having trouble saving and re-applying the initial line styles as on the `line.on('mouseout')` function, but i'll play with it later. 
+
+
+it's shitty, but pushing it all to prod.
 
 # Running Notes for Bottom Of File
 
