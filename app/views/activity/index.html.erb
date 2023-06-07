@@ -87,18 +87,17 @@
             this.bindPopup(popup);
             popup.setLatLng(e.latlng).openOn(map);
             this.setStyle({
-              color: "#EE4B2B",
-              weight: 5,
-              opacity: 3
+              weight: 7,
+              opacity: 2
             })
           });
 
           line.on('mouseout', function(e) {
             this.setStyle({
               weight: 3, 
-              opacity: .7, 
-              color: randbow(polyline_count, i)
-            });
+              opacity: .7
+
+              });
 
             console.log(initialStyles)
             e.target.closePopup();
