@@ -44,6 +44,6 @@ class ActivityController < ApplicationController
   private
 
     def activities_params
-      params.permit(:days, :month, :begin, :end, :latlng)
+      params.permit(:days, :month, :begin, :end, :latlng, :zoom)
     end
 end
