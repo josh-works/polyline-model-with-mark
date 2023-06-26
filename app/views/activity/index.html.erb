@@ -139,6 +139,16 @@
 
         // add start/finish marker to map via `coordinates``
         // https://code.dblock.org/2018/02/17/auto-publishing-strava-runs-to-github-pages.html
+
+
+        map.on('click', function(e){
+        var lt = String(e.latlng.lat);
+        var lg = String(e.latlng.lng);
+        var popup = L.popup()
+          .setLatLng(e.latlng)
+          .setContent(lt + " " + lg)
+          .openOn(map);
+      });
      </script>
 
 <h1>Activity#index</h1>
