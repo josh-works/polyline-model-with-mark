@@ -510,11 +510,125 @@ OK. made SOME progress. I'm having trouble saving and re-applying the initial li
 
 it's shitty, but pushing it all to prod.
 
+[...]
+
+Decided to not change the color, couldn't easily store it ini an `initialState` object; instead, I'm 'just' modifying the polyline opacity and stroke width - then, on `mouseLeave`, I reset the stroke/opacity to their starting values, but hard-coded.
+
+It's good enough for now. 
+
+Next, I'm going to get photos saved in the database.
+
+IIRC, Strava has each individual photo associated with an activity, and the photo has a latlng and timestamp. I believe there's a preview resolution available, and full. I remember at least once being annoyed that strava didn't scale down photos, so if they still don't I will have to do so before saving them.
+
+I think i'll configure active_storage, and save copies of these images locally and then on S3 or whatever Heroku has me use to store images. 
+
+I've never dealt with this directly before, but have been on the edges enough that this shouldn't be _too_ big of a lift. 
+
+Looks like heroku/aws s3 plugin is free, if your s3 bucket is the same regioun as the heroku app. 
+
+More: https://devcenter.heroku.com/articles/s3. I'll pick up there, first I'll figure out how to get 'my' images from the Strava API.
+
+[...]
+
+declaring defeat for now. Cannot get more than crappy preview image urls from the API:
+
+```
+#<GrabPolylines:0x0000000107684518>:0> photo = _.first
+=> {"unique_id"=>"bfb4e48f-8576-4309-abb7-0f39aaffa594",
+ "athlete_id"=>38072598,
+ "activity_id"=>9196218867,
+ "activity_name"=>"Morning Activity",
+ "resource_state"=>2,
+ "caption"=>"",
+ "source"=>1,
+ "uploaded_at"=>2023-06-03 17:56:56 UTC,
+ "created_at"=>2023-06-03 17:47:29 UTC,
+ "created_at_local"=>2023-06-03 11:47:29 UTC,
+ "urls"=>{"1800"=>"https://d3nn82uaxijpm6.cloudfront.net/assets/media/placeholder-photo@4x-13b0b44cfa828acc8b95d8dc4b8157d87666aa1ea8ef814c6ec36cd542d2b756.png"},
+ "sizes"=>{"1800"=>[1372, 1000]},
+ "default_photo"=>false}
+```
+
+sigh. placeholders everywhere.
+
+I opened [a new issue](https://github.com/dblock/strava-ruby-client/issues/76) on the repo for `strava-ruby-client`, and sure enough, I stumbled into a deprecated part of the strava API, so my confusion is validated. 
+
+[simonneutert](https://github.com/simonneutert) suggested an alternative, slightly less convenient way to get photos, which works, but currently I can retrieve only a single photo per activity. 
+
+That's enough to sketch out the rest of a photo model, even if I can only get one per trip. 
+
+We'll do a one to many relationship between Activity and Photos. I currently only have polyline, I think I'll keep it like 1-many polyine:photos.
+
+-----
+
+Next session.
+
+So, re-freshed a bit on the API calls, reminded myself how to get an image:
+
+```ruby
+
+client = Strava::Api::Client.new(
+access_token: "5968296d8412d88ce649bf2e0152d7e3d0792c11"
+)
+
+client.athlete_activities
+activities = _
+act = _.first
+client.activity(act.id)
+# big honkin' thing
+activity = _
+activity["photos"]
+# ["primary"]["urls"]["600"]
+"https://dgtzuqphqg23d.cloudfront.net/t-qtdh7oojntbbmFzDQO1IZZQTwhyy4jF6mcJrgSBs0-768x576.jpg"
+```
+
+To rebuild in Postman:
+
+```
+# activity.id = 9242441144
+GET https://www.strava.com/api/v3/activities/9242441144
+# Authorization: Bearer [access_token]
+```
+So, anyway, there's an image...
+
+We'll be implementing ActiveStorage. To work online I guess I'll set up AWS S3? bleh. 
+
+https://guides.rubyonrails.org/active_storage_overview.html
+
+Nevermind. That's a ton of work to serve images that are already being served. I'm going to instead save the image URL, and source that URL for images I serve in my app.
+
+I might still do something like `Photo.new(url: "https://dgtzuqphqg23d.cloudfront.net/t-qtdh7oojntbbmFzDQO1IZZQTwhyy4jF6mcJrgSBs0-768x576.jpg")` and associate those photos with a given polyline.
+
+Lemme think, and stretch my brain.
+
+When I get back, I'll try hard-coding an image into a polyline somehow. Maybe as a pin. Like... I guess I'll need to add markers to the line, soon, at the beginning and end. 
+
+[...]
+
+When I return, I'll figure out how to add a marker to the beginning of a polyline.
+
+[...]
+
+Done, that was easy. Like 30 seconds. 
+
+```javascript
+  marker = L.marker(coordinates[0]).addTo(map)
+  marker = L.marker(coordinates[coordinates.length - 1]).addTo(map)
+```
+
+Next, I want to click a polyline and get to it's detailed view. 
+
+[...]
+
+
+
 # Running Notes for Bottom Of File
 
 ## issues
 
-- [ ] pinch and zoom and drag is broken on mobile, causes page reloads unintentionally
+- [x] ~pinch and zoom and drag is broken on mobile, causes page reloads unintentionally~ was mobile browser's drag-to-refresh setting.
+- [ ] buttons/site-nav confusing, esp. on mobile
+- [ ] add `/about` with link to this github, home page, explanation
 
 ## features
 

@@ -46,6 +46,12 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     coordinates, initialStyles
   ).addTo(map);
 
+  // add marker to coordinates[0] and coordinates[-1]?
+
+  marker = L.marker(coordinates[0]).addTo(map)
+  marker = L.marker(coordinates[coordinates.length - 1]).addTo(map)
+
+
   map.fitBounds(line.getBounds());
 
   var popup = L.popup();

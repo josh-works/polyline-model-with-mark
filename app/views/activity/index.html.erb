@@ -78,12 +78,14 @@
                 lineJoin: 'round'
             }
           ).addTo(map);
+          // marker = L.marker(coordinates[0]).addTo(map)
 
           var initialStyles = line.options
 
           line.on('mouseover', function(e){
             var popup = L.popup();
-            popup.setContent(run["activity_name"]);
+            popup.setContent(run["activity_name"] + "<a href=\"33\">run</a>");
+
             this.bindPopup(popup);
             popup.setLatLng(e.latlng).openOn(map);
             this.setStyle({
@@ -99,7 +101,6 @@
 
               });
 
-            console.log(initialStyles)
             e.target.closePopup();
           });
       
