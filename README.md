@@ -620,6 +620,17 @@ Next, I want to click a polyline and get to it's detailed view.
 
 [...]
 
+## 2023-06-26 
+
+[a long while later]
+
+Just pushed some updates to the latlng parsing, so I can do things like: 
+
+- https://mobility-data.herokuapp.com/?latlng=39.75018407535552,-105.01011908054352&zoom=18
+- https://mobility-data.herokuapp.com/?latlng=39.743708460014034,-105.0207781791687&zoom=18
+
+cool. Next... maybe make it so I can click the little 'map' url that's getting added in tooltip popups.
+
 
 
 # Running Notes for Bottom Of File
